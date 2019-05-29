@@ -45,7 +45,7 @@ public class KohonenPattern2D extends PApplet {
 		
 		
 		
-		frameRate(60);
+		frameRate(1024);
 //		fill(255);
 		strokeWeight(1 / scaleFactor);
 		
@@ -216,10 +216,15 @@ public class KohonenPattern2D extends PApplet {
 			    break;
 			}
 			iterationsCounter += 1;
+//			delay(50);
+			// broken lines
+			// thread iterations quicker than draw
+			// add delay
 		}
 		
 		println("stopped");	
-		noLoop();	
+//		noLoop();	
+		// or continue drawing with fixed neurons
 		return;
 	}
 	

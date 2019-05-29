@@ -126,10 +126,14 @@ public class KohonenPattern1D extends PApplet {
 	    }
 	    iterationsCounter += 1;
 //	    delay(1);
+	    // broken lines
+	 	// thread iterations quicker than draw
+	 	// add delay
 	}
 	
 	println("stopped");
-	noLoop();
+//	noLoop();
+	// or continue drawing with fixed neurons
 	return;
     }
     

@@ -36,7 +36,7 @@ public class KohonenColours extends PApplet {
 	
 	public void setup() {
 		
-		frameRate(5);
+		frameRate(30);
 		try {
 			network = networkInit();
 		} catch(Exception e) {
