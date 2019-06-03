@@ -14,13 +14,15 @@ public class KohonenPattern2D extends PApplet {
 		
 	}
 	
-	static final int windowSizeX = 350;
-	static final int windowSizeY = 350;
+	static final int windowSizeX = 600;
+	static final int windowSizeY = 600;
 	static final int squareHeight = 1;
 	static final float scaleFactor = 300;
+	static final float ellipseHeight = 1;
+	static final float ellipseWidth = 1.5f;
 	
 	static final int dimInputSpace = 2; // non modificare
-//	static final double neuronTheta = 50e-3;
+	static final int dimNeuronSpace = 2;
 	
 	static float epsilon = 0.2f;
 	static float sigma = 18;
@@ -45,7 +47,7 @@ public class KohonenPattern2D extends PApplet {
 		
 		
 		
-		frameRate(1024);
+		frameRate(30);
 //		fill(255);
 		strokeWeight(1 / scaleFactor);
 		
@@ -54,7 +56,9 @@ public class KohonenPattern2D extends PApplet {
 		
 //		translate(windowSizeX / 2, windowSizeY / 2);
 		scale(scaleFactor);
-		square(0, 0, squareHeight);
+//		square(0, 0, squareHeight);
+		
+		ellipseMode(CORNER);
 		
 		try {
 			network = networkInit();
@@ -78,69 +82,70 @@ public class KohonenPattern2D extends PApplet {
 		background(200);
 //		translate(windowSizeX / 2, windowSizeY / 2);
 		scale(scaleFactor);
-		square(0, 0, squareHeight);
+//		square(0, 0, squareHeight);
+		ellipse(0, 0, ellipseWidth, ellipseHeight);
 		
 		for (int i = 0; i < network.length; i++) {
 			for (int j = 0; j < network[i].length; j++) {
 				
 				if (i == 0 && j == 0) {
 					
-					line(network[i][j].weights[0], network[i][j].weights[1], network[i][j + 1].weights[0], network[i][j + 1].weights[1]);
-					line(network[i][j].weights[0], network[i][j].weights[1], network[i + 1][j].weights[0], network[i + 1][j].weights[1]);
+					line(network[i][j].getWeights()[0], network[i][j].getWeights()[1], network[i][j + 1].getWeights()[0], network[i][j + 1].getWeights()[1]);
+					line(network[i][j].getWeights()[0], network[i][j].getWeights()[1], network[i + 1][j].getWeights()[0], network[i + 1][j].getWeights()[1]);
 				}
 				
 				else if (i == network.length - 1 && j == 0) {
 					
-					line(network[i][j].weights[0], network[i][j].weights[1], network[i][j + 1].weights[0], network[i][j + 1].weights[1]);
-					line(network[i][j].weights[0], network[i][j].weights[1], network[i - 1][j].weights[0], network[i - 1][j].weights[1]);
+					line(network[i][j].getWeights()[0], network[i][j].getWeights()[1], network[i][j + 1].getWeights()[0], network[i][j + 1].getWeights()[1]);
+					line(network[i][j].getWeights()[0], network[i][j].getWeights()[1], network[i - 1][j].getWeights()[0], network[i - 1][j].getWeights()[1]);
 				}
 				
 				else if (i == 0 && j == network[i].length - 1) {
 					
-					line(network[i][j].weights[0], network[i][j].weights[1], network[i][j - 1].weights[0], network[i][j - 1].weights[1]);
-					line(network[i][j].weights[0], network[i][j].weights[1], network[i + 1][j].weights[0], network[i + 1][j].weights[1]);
+					line(network[i][j].getWeights()[0], network[i][j].getWeights()[1], network[i][j - 1].getWeights()[0], network[i][j - 1].getWeights()[1]);
+					line(network[i][j].getWeights()[0], network[i][j].getWeights()[1], network[i + 1][j].getWeights()[0], network[i + 1][j].getWeights()[1]);
 				}
 				
 				else if (i == network.length - 1 && j == network[i].length - 1) {
 					
-					line(network[i][j].weights[0], network[i][j].weights[1], network[i][j - 1].weights[0], network[i][j - 1].weights[1]);
-					line(network[i][j].weights[0], network[i][j].weights[1], network[i - 1][j].weights[0], network[i - 1][j].weights[1]);
+					line(network[i][j].getWeights()[0], network[i][j].getWeights()[1], network[i][j - 1].getWeights()[0], network[i][j - 1].getWeights()[1]);
+					line(network[i][j].getWeights()[0], network[i][j].getWeights()[1], network[i - 1][j].getWeights()[0], network[i - 1][j].getWeights()[1]);
 				}
 				
 				else if (i == 0) {
 					
-					line(network[i][j].weights[0], network[i][j].weights[1], network[i][j + 1].weights[0], network[i][j + 1].weights[1]);
-					line(network[i][j].weights[0], network[i][j].weights[1], network[i + 1][j].weights[0], network[i + 1][j].weights[1]);
-					line(network[i][j].weights[0], network[i][j].weights[1], network[i][j - 1].weights[0], network[i][j - 1].weights[1]);
+					line(network[i][j].getWeights()[0], network[i][j].getWeights()[1], network[i][j + 1].getWeights()[0], network[i][j + 1].getWeights()[1]);
+					line(network[i][j].getWeights()[0], network[i][j].getWeights()[1], network[i + 1][j].getWeights()[0], network[i + 1][j].getWeights()[1]);
+					line(network[i][j].getWeights()[0], network[i][j].getWeights()[1], network[i][j - 1].getWeights()[0], network[i][j - 1].getWeights()[1]);
 				}
 				
 				else if (j == 0) {
 					
-					line(network[i][j].weights[0], network[i][j].weights[1], network[i][j + 1].weights[0], network[i][j + 1].weights[1]);
-					line(network[i][j].weights[0], network[i][j].weights[1], network[i + 1][j].weights[0], network[i + 1][j].weights[1]);
-					line(network[i][j].weights[0], network[i][j].weights[1], network[i + 1][j].weights[0], network[i + 1][j].weights[1]);
+					line(network[i][j].getWeights()[0], network[i][j].getWeights()[1], network[i][j + 1].getWeights()[0], network[i][j + 1].getWeights()[1]);
+					line(network[i][j].getWeights()[0], network[i][j].getWeights()[1], network[i + 1][j].getWeights()[0], network[i + 1][j].getWeights()[1]);
+					line(network[i][j].getWeights()[0], network[i][j].getWeights()[1], network[i + 1][j].getWeights()[0], network[i + 1][j].getWeights()[1]);
 				}
 				
 				else if (i == network.length - 1) {
 					
-					line(network[i][j].weights[0], network[i][j].weights[1], network[i][j + 1].weights[0], network[i][j + 1].weights[1]);
-					line(network[i][j].weights[0], network[i][j].weights[1], network[i - 1][j].weights[0], network[i - 1][j].weights[1]);
-					line(network[i][j].weights[0], network[i][j].weights[1], network[i][j - 1].weights[0], network[i][j - 1].weights[1]);
+					line(network[i][j].getWeights()[0], network[i][j].getWeights()[1], network[i][j + 1].getWeights()[0], network[i][j + 1].getWeights()[1]);
+					line(network[i][j].getWeights()[0], network[i][j].getWeights()[1], network[i - 1][j].getWeights()[0], network[i - 1][j].getWeights()[1]);
+					line(network[i][j].getWeights()[0], network[i][j].getWeights()[1], network[i][j - 1].getWeights()[0], network[i][j - 1].getWeights()[1]);
 				}
 				
 				else if (j == network[i].length - 1) {
 					
-					line(network[i][j].weights[0], network[i][j].weights[1], network[i][j - 1].weights[0], network[i][j - 1].weights[1]);
-					line(network[i][j].weights[0], network[i][j].weights[1], network[i + 1][j].weights[0], network[i + 1][j].weights[1]);
-					line(network[i][j].weights[0], network[i][j].weights[1], network[i - 1][j].weights[0], network[i - 1][j].weights[1]);
+					line(network[i][j].getWeights()[0], network[i][j].getWeights()[1], network[i][j - 1].getWeights()[0], network[i][j - 1].getWeights()[1]);
+					line(network[i][j].getWeights()[0], network[i][j].getWeights()[1], network[i + 1][j].getWeights()[0], network[i + 1][j].getWeights()[1]);
+					line(network[i][j].getWeights()[0], network[i][j].getWeights()[1], network[i - 1][j].getWeights()[0], network[i - 1][j].getWeights()[1]);
 				}
 				
 				else {
 					
-					line(network[i][j].weights[0], network[i][j].weights[1], network[i][j + 1].weights[0], network[i][j + 1].weights[1]);
-					line(network[i][j].weights[0], network[i][j].weights[1], network[i + 1][j].weights[0], network[i + 1][j].weights[1]);
-					line(network[i][j].weights[0], network[i][j].weights[1], network[i][j - 1].weights[0], network[i][j - 1].weights[1]);
-					line(network[i][j].weights[0], network[i][j].weights[1], network[i - 1][j].weights[0], network[i - 1][j].weights[1]);
+					line(network[i][j].getWeights()[0], network[i][j].getWeights()[1], network[i][j + 1].getWeights()[0], network[i][j + 1].getWeights()[1]);
+					line(network[i][j].getWeights()[0], network[i][j].getWeights()[1], network[i + 1][j].getWeights()[0], network[i + 1][j].getWeights()[1]);
+					line(network[i][j].getWeights()[0], network[i][j].getWeights()[1], network[i][j - 1].getWeights()[0], network[i][j - 1].getWeights()[1]);
+					line(network[i][j].getWeights()[0], network[i][j].getWeights()[1], network[i - 1][j].getWeights()[0], network[i - 1][j].getWeights()[1]);
 				}
 				
 			}
@@ -189,11 +194,12 @@ public class KohonenPattern2D extends PApplet {
 		
 	}
 	
-	public void startLearning() {
+	public void startLearning() throws Exception {
 		
 		while (epsilon > 0.01f) {
 			
-			float[] randomExample = randomExample();
+//			float[] randomExample = randomExampleSquare();
+			float[] randomExample = randomExampleEllipse();
 
 			Neuron winner = minDistance(randomExample, network);
 
@@ -230,20 +236,25 @@ public class KohonenPattern2D extends PApplet {
 	
 	private Neuron[][] networkInit() throws Exception {
 		
-		Neuron[][] network = new Neuron[layerNeurons][layers];
+		Network net = new Network(dimNeuronSpace, layerNeurons, layers);
+		
+		Neuron[][] network = net.get2Dnetwork();
 		
 		for (int i = 0; i < layerNeurons; i++) {
 			for (int j = 0; j < layers; j++) {
 						
-				network[i][j] = new Neuron(dimInputSpace, i, j);
+				network[i][j] = new Neuron(dimInputSpace, dimNeuronSpace);
 				network[i][j].randomWeightsInit();
+				
+				network[i][j].setCoord(i, 0);
+				network[i][j].setCoord(j, 1);
 			}
 		}
 		return network;
 		
 	}
 	
-	private float[] randomExample() {
+	private float[] randomExampleSquare() {
 		
 		Random randomN = new Random();
 		float[] randomExample = new float[dimInputSpace];
@@ -253,6 +264,27 @@ public class KohonenPattern2D extends PApplet {
 		
 		randomExample[0] = randomN.nextFloat() * squareHeight;
 		randomExample[1] = randomN.nextFloat() * squareHeight;
+		
+		return randomExample;
+	}
+	
+	private float[] randomExampleEllipse() {
+		
+		float[] randomExample = new float[dimInputSpace];
+		Random randomN = new Random();
+		
+		float pointXcoord = randomN.nextFloat() * ellipseWidth;
+		float pointYcoord = randomN.nextFloat() * ellipseHeight;
+		float insideEllipseCond = (sq(pointXcoord - (ellipseWidth / 2)) / sq(ellipseWidth / 2)) + (sq(pointYcoord - (ellipseHeight / 2)) / sq(ellipseHeight / 2));
+		
+		while (insideEllipseCond > 1) {
+			
+			pointXcoord = randomN.nextFloat() * ellipseWidth;
+			pointYcoord = randomN.nextFloat() * ellipseHeight;
+			insideEllipseCond = (sq(pointXcoord - (ellipseWidth / 2)) / sq(ellipseWidth / 2)) + (sq(pointYcoord - (ellipseHeight / 2)) / sq(ellipseHeight / 2));
+		}
+		randomExample[0] = pointXcoord;
+		randomExample[1] = pointYcoord;
 		
 		return randomExample;
 	}
@@ -278,8 +310,8 @@ public class KohonenPattern2D extends PApplet {
 		for (int i = 0; i < network.length; i++) {
 			for (int j = 0; j < network[i].length; j++) {
 				
-				float distanceWinner = dist(randomExample[0], randomExample[1], winner.weights[0], winner.weights[1]);
-				float distanceCurrent = dist(randomExample[0], randomExample[1], network[i][j].weights[0], network[i][j].weights[1]);
+				float distanceWinner = dist(randomExample[0], randomExample[1], winner.getWeights()[0], winner.getWeights()[1]);
+				float distanceCurrent = dist(randomExample[0], randomExample[1], network[i][j].getWeights()[0], network[i][j].getWeights()[1]);
 				
 				if (distanceCurrent < distanceWinner) {
 					winner = network[i][j];
@@ -289,17 +321,17 @@ public class KohonenPattern2D extends PApplet {
 		return winner;
 	}
 	
-	private void updateNetwork(Neuron winner, float[] randomExample) {
+	private void updateNetwork(Neuron winner, float[] randomExample) throws Exception {
 		
 		for (int i = 0; i < network.length; i++) {
 			for (int j = 0; j < network[i].length; j++) {
 				
 				float[] weightVariation = new float[2]; 
-				weightVariation[0] = exp( - (((sq(i - winner.iCoord) + sq(j - winner.jCoord)) / (2 * sq(sigma))))) * (randomExample[0] - network[i][j].weights[0]);
-				weightVariation[1] = exp( - (((sq(i - winner.iCoord) + sq(j - winner.jCoord)) / (2 * sq(sigma))))) * (randomExample[1] - network[i][j].weights[1]);
+				weightVariation[0] = exp( - (((sq(i - winner.getCoord(0)) + sq(j - winner.getCoord(1))) / (2 * sq(sigma))))) * (randomExample[0] - network[i][j].getWeights()[0]);
+				weightVariation[1] = exp( - (((sq(i - winner.getCoord(0)) + sq(j - winner.getCoord(1))) / (2 * sq(sigma))))) * (randomExample[1] - network[i][j].getWeights()[1]);
 				
-				network[i][j].weights[0] = network[i][j].weights[0] + epsilon * weightVariation[0];
-				network[i][j].weights[1] = network[i][j].weights[1] + epsilon * weightVariation[1];
+				network[i][j].getWeights()[0] = network[i][j].getWeights()[0] + epsilon * weightVariation[0];
+				network[i][j].getWeights()[1] = network[i][j].getWeights()[1] + epsilon * weightVariation[1];
 			}
 		}
 	}

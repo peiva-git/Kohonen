@@ -6,70 +6,56 @@ import java.util.Random;
 
 public class Neuron {
 	
-	public float[] weights;
-	public int iCoord;
-	public int jCoord;
-	public int rCoord;
-//	private double theta;
-//	private int dimWeightsSpace;
+	private float[] getWeights;
+	private NeuronCoord[] coord;
 	
-	public Neuron(int dimInputSpace, int iCoord, int jCoord, int rCoord) throws Exception {
+	
+	public Neuron(int dimInputSpace, int dimNeuronSpace /*, int dummy1, int dummy2, int dummy3 */) throws Exception {
 		
-		if (dimInputSpace < 0 || iCoord < 0 || jCoord < 0 || rCoord < 0) {
+		if (dimInputSpace <= 0 || dimNeuronSpace <= 0) {
 			throw new Exception("[Neuron]: invalid arguments");
 		}
+		this.getWeights = new float[dimInputSpace + 1];
+		this.coord = new NeuronCoord[dimNeuronSpace];
 		
-		this.weights = new float[dimInputSpace + 1];
-		this.iCoord = iCoord;
-		this.jCoord = jCoord;
-		this.rCoord = rCoord;
-	}
-	
-	public Neuron(int dimInputSpace, int iCoord, int jCoord /* , int dimWeightsSpace */) throws Exception {		
-		
-		if (dimInputSpace < 0 || iCoord < 0 || jCoord < 0) {
-			throw new Exception("[Neuron]: invalid arguments");
+		for (int i = 0; i < this.coord.length; i++) {
+			this.coord[i] = new NeuronCoord(0);
 		}
+	}
+	
+	public void setCoord(int coord, int pos) throws Exception {
 		
-		this.weights = new float[dimInputSpace + 1];
-		this.iCoord = iCoord;
-		this.jCoord = jCoord;
-		this.rCoord = -1;
-//		this.theta = theta;
-//		this.dimWeightsSpace = dimWeightsSpace;
-	}
-	
-	public Neuron(int dimInputSpace, int iCoord) throws Exception {
-	    
-	    if (dimInputSpace < 0 || iCoord < 0) {
-		throw new Exception("[Neuron]: invalid arguments");
-	    }
-	    
-	    this.weights = new float[dimInputSpace + 1];
-	    this.iCoord = iCoord;
-	    this.jCoord = -1;
-	    this.rCoord = -1;
-	}
-	
-	public Neuron(int dimInputSpace) throws Exception {
-		if (dimInputSpace < 0) {
-			throw new Exception("[Neuron]: invalid argument");
+		if (pos < 0 || coord < 0) {
+			throw new Exception("[setCoord]: ivalid arguments");
 		}
+		this.coord[pos].set(coord);
+	}
+	
+	public int getCoord(int pos) throws Exception {
+		
+		if (pos < 0) {
+			throw new Exception("[getCoord]: invalid argument");
+		}
+		return this.coord[pos].get();
+	}
+	
+	public float[] getWeights() {
+		return this.getWeights;
 	}
 	
 	public void randomWeightsInit() {	
 		
 		Random random = new Random();
 		
-		for (int i = 0; i < this.weights.length; i++) {
+		for (int i = 0; i < this.getWeights.length; i++) {
 			
-			this.weights[i] = random.nextFloat();
+			this.getWeights[i] = random.nextFloat();
 		}
 	}
 	
 	public double output(float[] input) throws Exception {
 		
-		double prod = scProd(input, this.weights);
+		double prod = scProd(input, this.getWeights);
 		double res = Math.tanh(prod);
 		return res;
 	}
@@ -92,4 +78,28 @@ public class Neuron {
 		return res;
 	}
 
+}
+
+class NeuronCoord {
+	
+	private int coord;
+	
+	public NeuronCoord(int coord) throws Exception {
+		if (coord < 0) {
+			throw new Exception("[NeuronCoord]: invalid argument");
+		}
+		this.coord = coord;
+	}
+	
+	public void set(int coord) throws Exception {
+		if (coord < 0) {
+			throw new Exception("[Coord.set]: invalid argument");
+		}
+		this.coord = coord;
+	}
+	
+	public int get() {
+		return this.coord;
+	}
+	
 }

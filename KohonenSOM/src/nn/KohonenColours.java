@@ -15,6 +15,7 @@ public class KohonenColours extends PApplet {
 	static final int examplesN = 5;
 	
 	static final int dimInputSpace = 3;
+	static final int dimNeuronSpace = 2;
 	
 	static final int windowSizeX = 600;
 	static final int windowSizeY = 600;
@@ -50,19 +51,29 @@ public class KohonenColours extends PApplet {
 		
 //		background(200);
 		squarePlot();
-		iterate();
+		try	{
+			iterate();
+		}
+		catch (Exception e) {
+			println(e.getMessage());
+		}
+		
 		
 	}
 	
 	private Neuron[][] networkInit() throws Exception {
 		
-		Neuron[][] network = new Neuron[windowSizeX / squareHeight][windowSizeY / squareHeight];
+		Network net = new Network(dimNeuronSpace, windowSizeX / squareHeight, windowSizeY / squareHeight);
+		Neuron[][] network = net.get2Dnetwork();
 		
 		for (int i = 0; i < network.length; i++) {
 			for (int j = 0; j < network[i].length; j++) {
 				
-				network[i][j] = new Neuron(dimInputSpace, i, j);
+				network[i][j] = new Neuron(dimInputSpace, dimNeuronSpace);
 				network[i][j].randomWeightsInit();
+				
+				network[i][j].setCoord(i, 0);
+				network[i][j].setCoord(j, 1);
 			}
 		}
 		return network;
@@ -77,9 +88,9 @@ public class KohonenColours extends PApplet {
 		for (int i = 0; i < windowSizeX; i += squareHeight) {
 			for (int j = 0; j < windowSizeY; j += squareHeight) {
 				
-				float red = network[r][k].weights[0] * 255;
-				float green = network[r][k].weights[1] * 255;
-				float blue = network[r][k].weights[2] * 255;
+				float red = network[r][k].getWeights()[0] * 255;
+				float green = network[r][k].getWeights()[1] * 255;
+				float blue = network[r][k].getWeights()[2] * 255;
 				
 				k += 1;
 				
@@ -109,7 +120,7 @@ public class KohonenColours extends PApplet {
 		return example;
 	}
 	
-	private Neuron minDistance(float[] randomExample, Neuron[][] network) {
+	private Neuron minDistance(float[] randomExample, Neuron[][] network) throws Exception {
 		
 		Neuron winner = network[0][0];
 		
@@ -127,34 +138,34 @@ public class KohonenColours extends PApplet {
 		return winner;
 	}
 	
-	private float distance(float[] example, Neuron neuron) {
+	private float distance(float[] example, Neuron neuron) throws Exception {
 		
-		float neuronWeight1 = neuron.weights[0] * 255;
-		float neuronWeight2 = neuron.weights[1] * 255;
-		float neuronWeight3 = neuron.weights[2] * 255;
+		float neuronWeight1 = neuron.getWeights()[0] * 255;
+		float neuronWeight2 = neuron.getWeights()[1] * 255;
+		float neuronWeight3 = neuron.getWeights()[2] * 255;
 		
 		float dist = sqrt(sq(example[0] - neuronWeight1) + sq(example[1] - neuronWeight2) + sq(example[2] - neuronWeight3));
 		return dist;
 	}
 	
-	private void updateNetwork(Neuron winner, float[] randomExample) {
+	private void updateNetwork(Neuron winner, float[] randomExample) throws Exception {
 
 		for (int i = 0; i < network.length; i++) {
 			for (int j = 0; j < network[i].length; j++) {
 
 				float[] weightVariation = new float[3];
-				weightVariation[0] = exp(-(((sq(i - winner.iCoord) + sq(j - winner.jCoord)) / (2 * sq(sigma))))) * (randomExample[0] - network[i][j].weights[0]);
-				weightVariation[1] = exp(-(((sq(i - winner.iCoord) + sq(j - winner.jCoord)) / (2 * sq(sigma))))) * (randomExample[1] - network[i][j].weights[1]);
-				weightVariation[2] = exp(-(((sq(i - winner.iCoord) + sq(j - winner.jCoord)) / (2 * sq(sigma))))) * (randomExample[2] - network[i][j].weights[2]);
+				weightVariation[0] = exp(-(((sq(i - winner.getCoord(0)) + sq(j - winner.getCoord(1))) / (2 * sq(sigma))))) * (randomExample[0] - network[i][j].getWeights()[0]);
+				weightVariation[1] = exp(-(((sq(i - winner.getCoord(0)) + sq(j - winner.getCoord(1))) / (2 * sq(sigma))))) * (randomExample[1] - network[i][j].getWeights()[1]);
+				weightVariation[2] = exp(-(((sq(i - winner.getCoord(0)) + sq(j - winner.getCoord(1))) / (2 * sq(sigma))))) * (randomExample[2] - network[i][j].getWeights()[2]);
 
-				network[i][j].weights[0] = network[i][j].weights[0] + epsilon * weightVariation[0];
-				network[i][j].weights[1] = network[i][j].weights[1] + epsilon * weightVariation[1];
-				network[i][j].weights[2] = network[i][j].weights[2] + epsilon * weightVariation[2];
+				network[i][j].getWeights()[0] = network[i][j].getWeights()[0] + epsilon * weightVariation[0];
+				network[i][j].getWeights()[1] = network[i][j].getWeights()[1] + epsilon * weightVariation[1];
+				network[i][j].getWeights()[2] = network[i][j].getWeights()[2] + epsilon * weightVariation[2];
 			}
 		}
 	}
 	
-	public void startLearning() {
+	public void startLearning() throws Exception {
 
 		while (epsilon > 0.01f) {
 
@@ -188,7 +199,7 @@ public class KohonenColours extends PApplet {
 		return;
 	}
 	
-	private void iterate() {
+	private void iterate() throws Exception {
 		
 		float[] randomExample = normalizeExample(randomExampleFromSet());
 
