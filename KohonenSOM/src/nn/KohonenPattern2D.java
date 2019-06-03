@@ -28,8 +28,8 @@ public class KohonenPattern2D extends PApplet {
 	static float sigma = 18;
 	static final int maxIterations = 90000;
 	
-	static final int layerNeurons = 15;
-	static final int layers = 15;
+	static final int layerNeurons = 30;
+	static final int layers = 30;
 	
 	private static Neuron[][] network;
 	private static long iterationsCounter = 1;
