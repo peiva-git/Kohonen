@@ -37,7 +37,7 @@ public class KohonenColours extends PApplet {
 	
 	public void setup() {
 		
-		frameRate(30);
+		frameRate(10);
 		try {
 			network = networkInit();
 		} catch(Exception e) {
@@ -105,7 +105,7 @@ public class KohonenColours extends PApplet {
 	private float[] randomExampleFromSet() {
 
 		Random randomN = new Random();
-		float[][] randomExampleSet = { { 0, 128, 0 }, { 128, 0, 0 }, { 0, 0, 128 }, { 255, 255, 255 }, { 0, 0, 0 } };
+		float[][] randomExampleSet = { { 0, 255, 0 }, { 255, 0, 0 }, { 0, 0, 255 }, { 255, 255, 255 }, { 0, 0, 0 } };
 
 		int randomExampleIndex = randomN.nextInt(randomExampleSet.length);
 
