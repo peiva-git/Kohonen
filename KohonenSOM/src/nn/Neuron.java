@@ -7,7 +7,7 @@ public class Neuron {
 	
 	private float[] weights;
 	private NeuronCoord[] coord;
-	
+	private byte[] weightsDiscr;
 	
 	public Neuron(int dimInputSpace, int dimNeuronSpace) throws Exception {
 		
@@ -16,6 +16,21 @@ public class Neuron {
 		}
 		this.weights = new float[dimInputSpace];
 		this.coord = new NeuronCoord[dimNeuronSpace];
+		this.weightsDiscr = null;
+		
+		for (int i = 0; i < this.coord.length; i++) {
+			this.coord[i] = new NeuronCoord(0);
+		}
+	}
+	
+	public Neuron(int dimInputSpace, int dimNeuronSpace, String type) throws Exception {
+		
+		if (dimInputSpace <= 0 || dimNeuronSpace <= 0) {
+			throw new Exception("[Neuron]: invalid arguments");
+		}
+		this.weightsDiscr = new byte[dimInputSpace];
+		this.coord = new NeuronCoord[dimNeuronSpace];
+		this.weights = null;
 		
 		for (int i = 0; i < this.coord.length; i++) {
 			this.coord[i] = new NeuronCoord(0);
@@ -47,11 +62,28 @@ public class Neuron {
 		if (index < 0) {
 			throw new Exception("[setWeight]: invalid index");
 		}
-		weights[index] = weight;
+		
+		if (this.weights != null) {
+			
+			this.weights[index] = weight;
+			
+		} else if (this.weightsDiscr != null) {
+			
+			this.weightsDiscr[index] = (byte) Math.signum(weight);
+			
+		} else {
+			
+			throw new Exception("[setWeight]: weights not initialized");
+		}
+		
 	}
 	
-	public void randomWeightsInit() {	
+	public void randomWeightsInit() throws Exception {	
 		
+		if (weights == null) {
+			
+			throw new Exception("[randomWeightsInit]: cont weights not initialized");
+		}
 		Random random = new Random();
 		
 		for (int i = 0; i < this.weights.length; i++) {
@@ -62,16 +94,35 @@ public class Neuron {
 	
 	public double outputCont(float[] input) throws Exception {
 		
-		double prod = scProd(input, this.weights);
-		double res = Math.tanh(prod);
+		double res = 0;
+		if (this.weights != null) {
+			
+			double prod = scProd(input, this.weights);
+			res = Math.tanh(prod);
+			
+		} else {
+			
+			throw new Exception("[outputCont]: cont weights not initialized");
+		}
+		
 		return res;
 	}
 	
 	public double outputDisc(float[] input) throws Exception {
 		
-		double prod = scProd(input, this.weights);
-		double res = Math.signum(prod);
+		double res = 0;
+		if (this.weights != null) {
+			
+			double prod = scProd(input, this.weights);
+			res = Math.signum(prod);
+			
+		} else {
+			
+			throw new Exception("[outputCont]: cont weights not initialized");
+		}
+		
 		return res;
+		
 	}
 	
 	private double scProd(float[] input, float[] weights) throws Exception {
@@ -80,12 +131,11 @@ public class Neuron {
 			
 			throw new Exception("[scProd]: different length");
 		}
-		
 		double res = 0;
-		
+
 		int i;
 		for (i = 0; i < input.length - 1; i++) {
-			
+
 			res += input[i] * weights[i];
 		}
 		res += -1 * weights[i];
