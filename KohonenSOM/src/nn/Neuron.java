@@ -2,20 +2,19 @@
 package nn;
 
 import java.util.Random;
-//import java.lang.Math;
 
 public class Neuron {
 	
-	private float[] getWeights;
+	private float[] weights;
 	private NeuronCoord[] coord;
 	
 	
-	public Neuron(int dimInputSpace, int dimNeuronSpace /*, int dummy1, int dummy2, int dummy3 */) throws Exception {
+	public Neuron(int dimInputSpace, int dimNeuronSpace) throws Exception {
 		
 		if (dimInputSpace <= 0 || dimNeuronSpace <= 0) {
 			throw new Exception("[Neuron]: invalid arguments");
 		}
-		this.getWeights = new float[dimInputSpace + 1];
+		this.weights = new float[dimInputSpace];
 		this.coord = new NeuronCoord[dimNeuronSpace];
 		
 		for (int i = 0; i < this.coord.length; i++) {
@@ -40,23 +39,38 @@ public class Neuron {
 	}
 	
 	public float[] getWeights() {
-		return this.getWeights;
+		return this.weights;
+	}
+	
+	public void setWeight(float weight, int index) throws Exception {
+		
+		if (index < 0) {
+			throw new Exception("[setWeight]: invalid index");
+		}
+		weights[index] = weight;
 	}
 	
 	public void randomWeightsInit() {	
 		
 		Random random = new Random();
 		
-		for (int i = 0; i < this.getWeights.length; i++) {
+		for (int i = 0; i < this.weights.length; i++) {
 			
-			this.getWeights[i] = random.nextFloat();
+			this.weights[i] = random.nextFloat();
 		}
 	}
 	
-	public double output(float[] input) throws Exception {
+	public double outputCont(float[] input) throws Exception {
 		
-		double prod = scProd(input, this.getWeights);
+		double prod = scProd(input, this.weights);
 		double res = Math.tanh(prod);
+		return res;
+	}
+	
+	public double outputDisc(float[] input) throws Exception {
+		
+		double prod = scProd(input, this.weights);
+		double res = Math.signum(prod);
 		return res;
 	}
 	

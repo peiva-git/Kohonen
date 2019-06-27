@@ -35,13 +35,8 @@ public class KohonenPattern1D extends PApplet {
 	public void setup() {
 
 		frameRate(60);
-//	fill(255);
 		strokeWeight(1 / scaleFactor);
 
-//	rectMode(CENTER); 
-		// change random examples accordingly
-
-//	translate(windowSizeX / 2, windowSizeY / 2);
 		scale(scaleFactor);
 		square(0, 0, squareHeight);
 
@@ -98,8 +93,7 @@ public class KohonenPattern1D extends PApplet {
 
 		if ((iterationsCounter % 100) == 0) {
 
-			println("iteration: " + iterationsCounter + "  fps: " + frameRate + "  time: " + hour() + ":" + minute()
-					+ ":" + second());
+			println("iteration: " + iterationsCounter + "  fps: " + frameRate + "  time: " + hour() + ":" + minute() + ":" + second());
 		}
 
 		iterationsCounter += 1;
@@ -122,8 +116,7 @@ public class KohonenPattern1D extends PApplet {
 
 				epsilon = epsilon * 0.999f;
 				sigma = sigma * 0.96f;
-				println("iteration: " + iterationsCounter + "  fps: " + frameRate + "  time: " + hour() + ":" + minute()
-						+ ":" + second());
+				println("iteration: " + iterationsCounter + "  fps: " + frameRate + "  time: " + hour() + ":" + minute() + ":" + second());
 			}
 
 			if (iterationsCounter == maxIterations) {
@@ -139,8 +132,6 @@ public class KohonenPattern1D extends PApplet {
 		}
 
 		println("stopped");
-//	noLoop();
-		// or continue drawing with fixed neurons
 		return;
 	}
 
@@ -165,10 +156,8 @@ public class KohonenPattern1D extends PApplet {
 
 		for (int i = 0; i < network.length; i++) {
 
-			float distanceWinner = dist(randomExample[0], randomExample[1], winner.getWeights()[0],
-					winner.getWeights()[1]);
-			float distanceCurrent = dist(randomExample[0], randomExample[1], network[i].getWeights()[0],
-					network[i].getWeights()[1]);
+			float distanceWinner = dist(randomExample[0], randomExample[1], winner.getWeights()[0], winner.getWeights()[1]);
+			float distanceCurrent = dist(randomExample[0], randomExample[1], network[i].getWeights()[0], network[i].getWeights()[1]);
 
 			if (distanceCurrent < distanceWinner) {
 				winner = network[i];
@@ -182,9 +171,6 @@ public class KohonenPattern1D extends PApplet {
 		Random randomN = new Random();
 		float[] randomExample = new float[dimInputSpace];
 
-//	randomExample[0] = (randomN.nextFloat() * squareHeight * 2) + (windowSizeX / 2) - squareHeight;
-//	randomExample[1] = (randomN.nextFloat() * squareHeight * 2) + (windowSizeY / 2) - squareHeight;
-
 		randomExample[0] = randomN.nextFloat() * squareHeight;
 		randomExample[1] = randomN.nextFloat() * squareHeight;
 
@@ -197,13 +183,12 @@ public class KohonenPattern1D extends PApplet {
 
 			float[] weightVariation = new float[2];
 
-			weightVariation[0] = exp(-((sq(i - winner.getCoord(0)) / (2 * sq(sigma)))))
-					* (randomExample[0] - network[i].getWeights()[0]);
-			weightVariation[1] = exp(-((sq(i - winner.getCoord(0)) / (2 * sq(sigma)))))
-					* (randomExample[1] - network[i].getWeights()[1]);
+			weightVariation[0] = exp(-((sq(i - winner.getCoord(0)) / (2 * sq(sigma))))) * (randomExample[0] - network[i].getWeights()[0]);
+			weightVariation[1] = exp(-((sq(i - winner.getCoord(0)) / (2 * sq(sigma))))) * (randomExample[1] - network[i].getWeights()[1]);
+			
+			network[i].setWeight(network[i].getWeights()[0] + epsilon * weightVariation[0], 0);
+			network[i].setWeight(network[i].getWeights()[1] + epsilon * weightVariation[1], 1);
 
-			network[i].getWeights()[0] = network[i].getWeights()[0] + epsilon * weightVariation[0];
-			network[i].getWeights()[1] = network[i].getWeights()[1] + epsilon * weightVariation[1];
 
 		}
 	}

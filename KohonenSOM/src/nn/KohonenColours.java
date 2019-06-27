@@ -44,12 +44,10 @@ public class KohonenColours extends PApplet {
 			println(e.getMessage());
 		}
 		
-//		thread("startLearning");
 	}
 	
 	public void draw() {
 		
-//		background(200);
 		squarePlot();
 		try	{
 			iterate();
@@ -157,10 +155,12 @@ public class KohonenColours extends PApplet {
 				weightVariation[0] = exp(-(((sq(i - winner.getCoord(0)) + sq(j - winner.getCoord(1))) / (2 * sq(sigma))))) * (randomExample[0] - network[i][j].getWeights()[0]);
 				weightVariation[1] = exp(-(((sq(i - winner.getCoord(0)) + sq(j - winner.getCoord(1))) / (2 * sq(sigma))))) * (randomExample[1] - network[i][j].getWeights()[1]);
 				weightVariation[2] = exp(-(((sq(i - winner.getCoord(0)) + sq(j - winner.getCoord(1))) / (2 * sq(sigma))))) * (randomExample[2] - network[i][j].getWeights()[2]);
+				
+				network[i][j].setWeight(network[i][j].getWeights()[0] + epsilon * weightVariation[0], 0);
+				network[i][j].setWeight(network[i][j].getWeights()[1] + epsilon * weightVariation[1], 1);
+				network[i][j].setWeight(network[i][j].getWeights()[2] + epsilon * weightVariation[2], 2);
 
-				network[i][j].getWeights()[0] = network[i][j].getWeights()[0] + epsilon * weightVariation[0];
-				network[i][j].getWeights()[1] = network[i][j].getWeights()[1] + epsilon * weightVariation[1];
-				network[i][j].getWeights()[2] = network[i][j].getWeights()[2] + epsilon * weightVariation[2];
+				
 			}
 		}
 	}
